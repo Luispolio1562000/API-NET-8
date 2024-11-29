@@ -1,4 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
+using Tarker.Booking.Application.Configuration;
+using Tarker.Booking.Application.DataBase.User.Commands.CreateUser;
+using Tarker.Booking.Application.DataBase.User.Commands.DeleteUser;
+using Tarker.Booking.Application.DataBase.User.Commands.UpdateUser;
+using Tarker.Booking.Application.DataBase.User.Commands.UpdateUserPassword;
 
 namespace Tarker.Booking.Application;
 
@@ -6,6 +12,17 @@ public static class DependencyInjectionService
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        var mapper = new MapperConfiguration(config => config.AddProfile(new MapperProfile()));
+
+
+        //Nos sirve para mapar objetos necesarios para consumir servicios
+        services.AddSingleton(mapper.CreateMapper());
+
+
+        services.AddTransient<ICreateUserCommand, CreateUserCommand>();
+        services.AddTransient<IUpdateUserCommand, UpdateUserCommand>();
+        services.AddTransient<IDeleteUserCommand, DeleteUserCommand>();
+        services.AddTransient<IUpdateUserPasswordCommand, UpdateUserPasswordCommand>();
         return services;
     }
 }
